@@ -21,3 +21,65 @@ $$ T_{ij} = \rho \times O_i \times D_j \times f(c_{ij}) $$
 In this equation, $\rho$ replaces the calibration variable, representing the average trip intensity. $O_i$ is the number of trips originating from zone $i$, indicating its production potential, while $D_j$ is the number of trips destined for zone $j$, reflecting its attraction potential. The function $f(c_{ij})$ represents the accessibility of zone $j$ from $i$, which is a generalized travel cost function. This function, known as the impedance or deterrence function, describes the relative "willingness" to make a trip as a function of travel costs.
 
 Employing principles from physics and adapting them to the nuances of urban travel behavior, the Gravity Model serves as an indispensable tool in predicting and analyzing trip distribution in transportation networks. Its ability to simulate travel patterns in various scenarios, particularly where historical data is lacking, makes it a cornerstone in the field of transportation planning.
+
+In the advanced application of the Gravity Model for urban transportation planning, the formula is enhanced by introducing balancing factors $A_i$ and $B_j$. This modification allows for a more accurate representation of trip distribution, acknowledging the interdependencies between various zones. The revised formula is given by:
+
+$$ T_{ij} = A_i \times O_i \times B_j \times D_j \times f(c_{ij}) $$
+
+Here, $A_i$ and $B_j$ are the balancing factors for the origin and destination zones, respectively, while $O_i$ and $D_j$ represent the trip production and attraction potentials. The function $f(c_{ij})$ continues to be the impedance or deterrence function, indicating the relative ease or difficulty of travel between zones.
+
+To derive the values of $A_i$ and $B_j$, we consider the following relationships: The sum of trips from all origins to a destination $j$ ($\sum_i T_{ij}$) is equal to the sum of the product of the balancing factors, production, and deterrence function for all origins to destination $j$. Since $B_j$ and $D_j$ are constants for each destination, they can be factored out of the summation:
+
+$$ D_j = B_j \times D_j \times \sum_i (A_i \times O_i \times f(c_{ij})) $$
+
+Therefore, the balancing factor $B_j$ is:
+
+$$ B_j = 1 / \sum_i (A_i \times O_i \times f(c_{ij})) $$
+
+Similarly, for the origin $i$, the balancing factor $A_i$ is:
+
+$$ A_i = 1 / \sum_j (B_j \times D_j \times f(c_{ij})) $$
+
+These balancing factors are interdependent, indicating that the calculation of one set requires the values of the other. This necessitates an iterative process, outlined as follows:
+
+1. Initially set all $B_j = 1$.
+2. With the current values of $B_j$, compute the balancing factors $A_i$ to satisfy the trip generation constraint:
+
+$$ \sum_j T_{ij} = O_i $$
+
+3. Update $B_j$ using the newly calculated $A_i$ to meet the trip attraction constraint:
+
+$$ \sum_i T_{ij} = D_j $$
+
+4. Calculate $T_{ij}$, update the Origin-Destination (OD) matrix, and check for the error percentage ($E\%$). The error is calculated as: (where $T$ is the total number of trips, equal to the sum of either all $O_i$ or all $D_j$.)
+
+$$ \text{error} = \frac{\sum_i |\sum_j T_{ij} - O_i| + \sum_j |\sum_i T_{ij} - D_j|}{T} $$
+
+5. Repeat steps 2 to 4 until the error percentage is below a predetermined threshold, indicating convergence.
+
+This iterative process ensures the Gravity Model accurately reflects the complex dynamics of trip distribution, making it a powerful tool for urban transportation planning. Its ability to adapt to various scenarios, particularly in the absence of historical data, highlights its importance in developing efficient and responsive transportation systems.
+
+## Code Script
+
+In the implementation of the Gravity Model, a Python script has been developed, providing a computational realization of the algorithm. The script includes a function named `gravity_model`, designed to generate an Origin-Destination (OD) matrix based on given inputs.
+
+The `gravity_model` function accepts the following inputs:
+- `O`: Origin matrix, representing the number of trips originating from each zone.
+- `D`: Destination matrix, indicating the number of trips destined for each zone.
+- `cost_matrix`: A matrix representing the travel costs between zones.
+- `deterrence_matrix`: A matrix that accounts for the deterrence effect of travel costs between zones.
+- `error_threshold`: A threshold value to determine the stopping condition based on the error percentage (default is 0.01).
+- `improvement_threshold`: A threshold to assess the improvement between iterations (default is 1e-4).
+
+The function's core algorithm involves an iterative process to balance the trip distribution based on the production and attraction potential of each zone, adjusted by the cost and deterrence factors. It iteratively calculates the balancing factors $A_i$ and $B_j$ for each zone and updates the OD matrix. The process continues until the change in the error percentage between iterations falls below the defined `improvement_threshold`, or the error percentage is less than the `error_threshold`.
+
+Key features of the script include:
+- Format and print functions for easy visualization of matrices.
+- Normalization of the Origin and Destination matrices to ensure their sums are equal.
+- Calculation of the OD matrix $T_{ij}$ using the updated balancing factors and deterrence matrix.
+- Calculation of error percentage to monitor the convergence of the model.
+- An iterative approach to update balancing factors and minimize error.
+
+This script is instrumental in applying the Gravity Model to real-world data, aiding in the efficient planning and analysis of transportation networks.
+
+
