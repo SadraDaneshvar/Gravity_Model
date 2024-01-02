@@ -126,7 +126,7 @@ Now you can integrate the `gravity_model` function into your codebase using the 
 > [!IMPORTANT]
 > This approach needs an Internet connection. 
 
-``` py
+``` python
 import requests
 
 # The URL of the raw Python file on GitHub
@@ -147,5 +147,72 @@ exec(compile(response.text, local_filename, 'exec'))
 from Gravity_Model import gravity_model
 ```
 
+Below is an example showcasing the proper usage of this function with appropriate input formats:
 
+``` python
+# Define a deterrence function based on an exponential decay (for instance)
+def deterrence_function(cij, beta):
+    return np.exp(-beta*cij)
+
+# Future origin array representing the number of trips originating from each zone
+future_origin = np.array([400, 460, 400, 702])
+
+# Future destination array representing the number of trips destined for each zone
+future_destination = np.array([260, 400, 500, 802])
+
+# Cost matrix representing the travel costs between zones
+cost_matrix = np.array([[3, 11, 18, 22],
+                        [12, 3, 12, 19],
+                        [15.5, 13, 5, 7],
+                        [24, 18, 8, 5]])
+
+# Beta parameter for the deterrence function
+beta = 0.1
+
+# Deterrence matrix calculated using the deterrence function and the cost matrix
+deterrence_matrix = deterrence_function(cost_matrix, beta)
+
+# Set the error threshold for the stopping condition of the gravity model
+error_threshold = 0.005
+
+# Set the improvement threshold for the stopping condition of the gravity model
+improvement_threshold = 0.000001
+
+# Call the gravity model function with the specified inputs
+gravity_model(future_origin, 
+              future_destination, 
+              cost_matrix, 
+              deterrence_matrix, 
+              error_threshold, 
+              improvement_threshold)
+```
+
+Example output:
+```
+Initial Cost Matrix:
+         Zone 1  Zone 2  Zone 3  Zone 4
+Zone 1     3.0    11.0    18.0    22.0
+Zone 2    12.0     3.0    12.0    19.0
+Zone 3    15.5    13.0     5.0     7.0
+Zone 4    24.0    18.0     8.0     5.0 
+
+Deterrence Matrix:
+           Zone 1    Zone 2    Zone 3    Zone 4
+Zone 1  0.740818  0.332871  0.165299  0.110803
+Zone 2  0.301194  0.740818  0.301194  0.149569
+Zone 3  0.212248  0.272532  0.606531  0.496585
+Zone 4  0.090718  0.165299  0.449329  0.606531 
+
+Final OD Matrix:
+              Zone 1   Zone 2   Zone 3   Zone 4    Origin
+Zone 1       156.724  100.059   65.680   75.811   398.275
+Zone 2        57.419  200.667  107.844   92.215   458.146
+Zone 3        25.439   46.412  136.538  192.490   400.880
+Zone 4        20.417   52.861  189.938  441.484   704.700
+Destination  260.000  400.000  500.000  802.000  1962.000 
+
+Number of Iterations: 2
+Stopping Condition: Error threshold met
+Error: 0.365%
+```
 
