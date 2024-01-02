@@ -269,6 +269,47 @@ def user_input_for_gravity_model():
 # Starting the process by calling the function
 user_input_for_gravity_model()
 ```
+
+And a sample output would be:
+
+```
+# User Inputs:
+## Enter the number of zones (e.g., 3): 3
+## Enter values for row 1 (e.g., '5 3 inf'): 1.0 1.2 1.8
+## Enter values for row 2 (e.g., '5 3 inf'): 1.2 1.0 1.5
+## Enter values for row 3 (e.g., '5 3 inf'): 1.8 1.5 1.0
+## Enter the origin array (Oi), values separated by space (e.g., '100 200 150'): 98 106 122
+## Enter the destination array (Dj), values separated by space (e.g., '80 120 100'): 102 118 106
+## Enter your custom deterrence function (use 'cij' for cost matrix value, e.g., '1/cij'): cij ** -2
+## Enter the error threshold (e.g., 0.01): 0.01
+## Enter the improvement threshold (e.g., 0.1): 0.00001
+
+Initial Cost Matrix:
+         Zone 1  Zone 2  Zone 3
+Zone 1     1.0     1.2     1.8
+Zone 2     1.2     1.0     1.5
+Zone 3     1.8     1.5     1.0 
+
+Deterrence Matrix:
+           Zone 1    Zone 2    Zone 3
+Zone 1  1.000000  0.694444  0.308642
+Zone 2  0.694444  1.000000  0.444444
+Zone 3  0.308642  0.444444  1.000000 
+
+Final OD Matrix:
+              Zone 1   Zone 2   Zone 3   Origin
+Zone 1        47.931   35.338   15.075   98.345
+Zone 2        33.060   50.543   21.561  105.164
+Zone 3        21.009   32.119   69.364  122.491
+Destination  102.000  118.000  106.000  326.000 
+
+Number of Iterations: 1
+Stopping Condition: Error threshold met
+Error: 0.513%
+```
+
+
+
 > [!TIP]
 > Additionally, you can input "inf" or "infinity" for the transportation cost in the cost matrix to indicate no connection between certain zones, allowing the model to correctly handle such scenarios.
 
