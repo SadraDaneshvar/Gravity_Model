@@ -216,3 +216,67 @@ Stopping Condition: Error threshold met
 Error: 0.365%
 ```
 
+### Interactive Usage
+
+For interactive usage, you can employ the following code snippet, allowing users to input the necessary data dynamically. Additionally, this approach provides the capability to input your own [deterrence function](#deterrence-matrix-calculation). It's important to keep in mind that the deterrence function should be defined following Python syntax.
+
+``` python
+def user_input_for_gravity_model():
+    # Prompting user to enter the number of zones (e.g., "3")
+    num_zones = int(input("Enter the number of zones (e.g., 3): "))
+
+    # Initializing a list to store cost matrix values
+    cost_matrix_values = []
+    for i in range(num_zones):
+        # Prompting user for cost matrix values row by row (e.g., "5 3 inf")
+        row = input(f"Enter values for row {i + 1} (e.g., '5 3 inf'): ")
+        # Converting inputs to float, replacing 'inf' or 'infinity' with np.inf
+        cost_matrix_values.append([float(val) if val not in ['inf', 'infinity'] else np.inf for val in row.split()])
+
+    # Creating a numpy array for the cost matrix
+    cost_matrix = np.array(cost_matrix_values)
+
+    # Prompting user for the origin array (e.g., "100 200 150")
+    origin_input = input("Enter the origin array (Oi), values separated by space (e.g., '100 200 150'): ")
+    # Converting inputs to float, handling 'inf' or 'infinity'
+    O = np.array([float(val) if val not in ['inf', 'infinity'] else np.inf for val in origin_input.split()])
+
+    # Prompting user for the destination array (e.g., "80 120 100")
+    destination_input = input("Enter the destination array (Dj), values separated by space (e.g., '80 120 100'): ")
+    # Converting inputs to float, handling 'inf' or 'infinity'
+    D = np.array([float(val) if val not in ['inf', 'infinity'] else np.inf for val in destination_input.split()])
+
+    # Prompting user for custom deterrence function formula (e.g., "1/cij")
+    deterrence_function_formula = input("Enter your custom deterrence function (use 'cij' for cost matrix value, e.g., '1/cij'): ")
+    
+    def custom_deterrence_function(cij):
+        # Adjusting formula to handle 'inf' and 'infinity'
+        deterrence_function_formula_replaced = deterrence_function_formula.replace('inf', 'np.inf').replace('infinity', 'np.inf')
+        # Evaluating the deterrence function
+        return eval(deterrence_function_formula_replaced)
+
+    # Creating deterrence matrix using the custom function
+    deterrence_matrix = custom_deterrence_function(cost_matrix)
+
+    # Prompting user for the error threshold (e.g., "0.01")
+    error_threshold = float(input("Enter the error threshold (e.g., 0.01): "))
+    # Prompting user for the improvement threshold (e.g., "0.1")
+    improvement_threshold = float(input("Enter the improvement threshold (e.g., 0.1): "))
+
+    # Calling the gravity model function with provided inputs
+    gravity_model(O, D, cost_matrix, deterrence_matrix, error_threshold, improvement_threshold)
+
+# Starting the process by calling the function
+user_input_for_gravity_model()
+```
+> [!TIP]
+> Additionally, you can input "inf" or "infinity" for the transportation cost in the cost matrix to indicate no connection between certain zones, allowing the model to correctly handle such scenarios.
+
+<br>
+
+If you have any feedback, please reach out to me at dsadra80@gmail.com
+
+## License
+
+[MIT LICENSE](LICENSE)
+
