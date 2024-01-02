@@ -82,8 +82,49 @@ Key features of the script include:
 
 This script serves as a practical tool for applying the Gravity Model, enabling users to implement the algorithm with ease and flexibility while addressing the specific constraints associated with the transportation problem at hand.
 
+### Deterrence Matrix Calculation
+
+In the Gravity Model, deterrence functions play a crucial role in defining the impedance or reluctance to travel between zones. Various functional forms can be used to represent the deterrence effect based on travel cost (`cij`). Below are some common deterrence functions:
+
+1. **Exponential Function:** This function models the deterrence effect as an exponentially decreasing function of the travel cost.
+   
+$$ f(c_{ij}) = \alpha \times \exp(-\beta \times c_{ij}) $$
+
+2. **Power Function:** In this formulation, the deterrence decreases as a power function of the travel cost.
+
+$$ f(c_{ij}) = \alpha \times c_{ij}^{-\beta} $$
+   
+3. **Combined Function:** This combined form uses both power and exponential components to model deterrence.
+
+$$ f(c_{ij}) = \alpha \times c_{ij}^{\beta} \times \exp(-\gamma \times c_{ij}) $$
+  
+4. **Lognormal Function:** The lognormal function applies a squared logarithmic transformation to the travel cost.
+
+$$ f(c_{ij}) = \alpha \times \exp(-\beta \times \ln^2(c_{ij} + 1)) $$
+   
+5. **Top-Lognormal Function:** This function modifies the lognormal form by adjusting the travel cost with a factor `gamma`.
+
+$$ f(c_{ij}) = \alpha \times \exp(\beta \times \ln^2(c_{ij} / \gamma)) $$
+
+For example, the lognormal deterrence function can be implemented in Python as follows:
+
+```python
+# Lognormal Deterrence Function
+def deterrence_function(cij, alpha, beta):
+    return alpha * np.exp(-beta * np.log(cij + 1)**2)
+```
+
+The provided `deterrence_function` for the lognormal form is just one example of how to implement a deterrence or impedance function in the Gravity Model. Users are encouraged to create similar functions tailored to their specific requirements and scenarios. Depending on the nature of the transportation network and the characteristics of travel behavior in the area of study, different deterrence functions may be more appropriate.
+
+> [!WARNING]
+> Ensure that the `cost_matrix` or the `cij` parameter is provided as NumPy array for proper function execution. Using arrays of other types may result in unexpected behavior.
+
+### Integration
+
+Now you can integrate the `gravity_model` function into your codebase using the following snippet, providing enhanced accessibility from any location. 
+
 > [!IMPORTANT]
-> Integrate this function into your codebase using the following snippet, providing enhanced accessibility from any location. This approach needs an Internet connection. 
+> This approach needs an Internet connection. 
 
 ``` py
 import requests
