@@ -80,6 +80,31 @@ Key features of the script include:
 - Calculation of error percentage to monitor the convergence of the model.
 - An iterative approach to update balancing factors and minimize error.
 
-This script is instrumental in applying the Gravity Model to real-world data, aiding in the efficient planning and analysis of transportation networks.
+This script serves as a practical tool for applying the Gravity Model, enabling users to implement the algorithm with ease and flexibility while addressing the specific constraints associated with the transportation problem at hand.
+
+> [!IMPORTANT]
+> Integrate this function into your codebase using the following snippet, providing enhanced accessibility from any location. This approach needs an Internet connection. 
+
+``` py
+import requests
+
+# The URL of the raw Python file on GitHub
+github_url = "https://raw.githubusercontent.com/SadraDaneshvar/Gravity_Model/main/Gravity_Model.py"
+
+# Specify the local filename to save the file in the current working directory
+local_filename = "Gravity_Model.py"
+
+# Download the file from GitHub with explicit encoding
+response = requests.get(github_url)
+with open(local_filename, 'w', encoding='utf-8') as file:
+    file.write(response.text)
+
+# Execute the code to make the functions/classes available in the notebook
+exec(compile(response.text, local_filename, 'exec'))
+
+# Now, you can import the module in your notebook
+from Gravity_Model import gravity_model
+```
+
 
 
